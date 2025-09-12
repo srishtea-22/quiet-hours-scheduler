@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { DialogFooter, DialogHeader } from "./ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { createClient } from "@/lib/supabase/client";
 
 export function AddButton() {
   const [startDate, setStartDate] = useState("");
@@ -22,6 +23,7 @@ export function AddButton() {
   const [endTime, setEndTime] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
+  const supabase = createClient();
   function calculateDuration(
     startDate: string,
     startTime: string,
@@ -47,7 +49,7 @@ export function AddButton() {
       : `${hours}h ${minutes}m`;
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!startDate || !startTime || !endDate || !endTime) {
@@ -59,6 +61,20 @@ export function AddButton() {
       toast.error("Quiet hours should end AFTER they start!");
       return;
     }
+
+    const user = await supabase.auth.getUser();
+    const { error } = await supabase.from("quiet_hours").insert({
+      user_id: user.data.user?.id,
+      start_time: new Date(`${startDate}T${startTime}`).toISOString(),
+      end_time: new Date(`${endDate}T${endTime}`).toISOString(),
+      reminder_sent: false,
+    });
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
     toast.success("Quiet hours created");
 
     setStartDate("");
