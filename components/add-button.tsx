@@ -71,7 +71,12 @@ export function AddButton() {
     });
 
     if (error) {
-      toast.error(error.message);
+      if (error.code === "23P01") {
+        toast.error("An overlapping entry exists!");
+      }
+      else {
+        toast.error(error.message);
+      }
       return;
     }
 
