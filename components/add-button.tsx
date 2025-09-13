@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { DialogFooter, DialogHeader } from "./ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/supabase/client";
 
 export function AddButton() {
   const [startDate, setStartDate] = useState("");
