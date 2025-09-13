@@ -16,7 +16,11 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/supabase/client";
 
-export function AddButton() {
+interface AddButtonProps {
+  onQuietHoursAdded?: () => void;
+}
+
+export function AddButton({ onQuietHoursAdded }: AddButtonProps) {
   const [startDate, setStartDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -24,6 +28,7 @@ export function AddButton() {
   const [isOpen, setIsOpen] = useState(false);
 
   const supabase = createClient();
+  
   function calculateDuration(
     startDate: string,
     startTime: string,
@@ -87,6 +92,10 @@ export function AddButton() {
     setEndDate("");
     setEndTime("");
     setIsOpen(false);
+
+    if (onQuietHoursAdded) {
+      onQuietHoursAdded();
+    }
   };
 
   const handleCancel = () => {
@@ -104,6 +113,7 @@ export function AddButton() {
       <div className="text-sm text-muted-foreground">Duration: {result}</div>
     ) : null;
   };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
