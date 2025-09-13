@@ -1,7 +1,7 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import { createClient } from "@/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { InfoIcon } from "lucide-react";
 import { QuietHoursTable } from "@/components/quiet_hours_table";
 import { AddButton } from "@/components/add-button";
